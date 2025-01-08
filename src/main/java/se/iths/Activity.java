@@ -11,9 +11,13 @@ public class Activity {
     private int distance;
     private Duration duration;
     private LocalDate startDate;
-    public Activity(int distance, String duration, String startDate) {
+    public Activity(int distance, String duration, String startDate) throws IllegalArgumentException {
+        if(distance == 0) {
+            throw new IllegalArgumentException("Distance must be greater than 0");
+        }
         this.id = String.valueOf(++idCounter);
         this.distance = distance;
+
         this.startDate = LocalDate.parse(startDate);
         this.duration = Duration.parse(duration);
     }

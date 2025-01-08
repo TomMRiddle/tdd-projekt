@@ -38,5 +38,13 @@ public class TestActivity {
         Activity activity2 = new Activity( 10, "PT1H", "2025-10-03");
         assertNotEquals(activity2.getId(), activity.getId());
     }
+    @Test
+    public void throwsExceptionNoDuration() {
+        assertThrows(Exception.class, () -> new Activity( 10, null, "2025-10-03"));
+    }
+    @Test
+    public void throwsExceptionNoDistance() {
+        assertThrows(IllegalArgumentException.class, () -> new Activity( 0, "PT1H", "2025-10-03"), "Distance must be greater than 0");
+    }
 
 }
