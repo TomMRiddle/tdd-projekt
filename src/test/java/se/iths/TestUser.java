@@ -6,14 +6,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class TestUser {
+class TestUser {
     
     private User user;
    private Activity activity;
 
     @BeforeEach
 
-    public void setup(){
+    void setup(){
         user = new User("name");
         user.setHeight(100);
         user.setAge(10);
@@ -25,40 +25,36 @@ public class TestUser {
 
 
     @Test
-    public void hasAName() {
+    void hasAName() {
 
         assertEquals("name", user.getName());
 
     }
 
     @Test
-    public void hasAHeight() {
+    void hasAHeight() {
 
         assertEquals(100, user.getHeight());
 
     }
 
     @Test
-    public void hasAnAge() {
+    void hasAnAge() {
 
         assertEquals(10, user.getAge());
 
     }
 
     @Test
-    public void hasAWeight() {
+    void hasAWeight() {
 
         assertEquals(100, user.getWeight());
 
     }
 
     @Test 
-    public void activityStoredInHashmap() {
+    void activityStoredInHashmap() {
         user.addActivity(activity);
         assertEquals(activity,user.getActivityByID(activity.getId()));
     }
-//    @Test
-//    public void hasAverageSpeed() {
-//        assert(activity.getAverageSpeed());
-//    }
 }
