@@ -35,4 +35,10 @@ public class Activity {
     public String getId() {
         return id;
     }
+    public int getAverageSpeed() {
+        return distance/(int)duration.toHours();
+    }
+    public int getMinutesPerKilometer() {
+        return (int)duration.toMinutes()/distance;
+    }
 }

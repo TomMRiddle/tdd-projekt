@@ -1,6 +1,13 @@
 package se.iths;
 
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.HashMap;
+import java.time.temporal.ChronoUnit;
+
 
 public class User {
 
@@ -8,14 +15,19 @@ public class User {
     private int age;
     private int weight;
     private int height;
+    private int fitnessScore;
     private HashMap <String, Activity> activities = new HashMap<>();
+    private String latestActivityId;
 
     
     public User (String name){
         this.name = name;
+        this.fitnessScore = 0;
     }
 
     public void addActivity(Activity activity) {
+        fitnessScore += activity.getDistance() + (activity.getAverageSpeed() / activity.getMinutesPerKilometer()) - getDaysSinceLastActivity() / 2;
+        latestActivityId = activity.getId();
         activities.put(activity.getId(), activity);
     }
     
@@ -35,7 +47,7 @@ public class User {
         return height;
     }
 
-    public Activity getActivityByID(String id) {
+    public Activity getActivityById(String id) {
         return activities.get(id);
     }
 
@@ -47,12 +59,17 @@ public class User {
         this.height = height;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setAge(int age) {
         this.age = age;
     }
 
+    private Activity getLatestActivity() {
+        return getActivityById(latestActivityId);
+    }
+    public int getDaysSinceLastActivity() {
+        return (getLatestActivity() == null ? 0 : (int)ChronoUnit.DAYS.between(getLatestActivity().getStartDate(), LocalDate.now()));
+    }
+    public int getFitnessScore() {
+        return fitnessScore;
+    }
 }

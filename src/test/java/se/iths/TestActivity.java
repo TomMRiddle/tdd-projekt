@@ -42,11 +42,19 @@ class TestActivity {
         assertNotEquals(activity2.getId(), activity.getId());
     }
     @Test
-    void throwsExceptionWhendurationIsNull() {
+    void throwsExceptionWhenDurationIsNull() {
         assertThrows(NullPointerException.class, () -> new Activity(10, null, "2025-10-03"));
     }
     @Test
     void throwsExceptionWhenDistanceIsZero() {
         assertThrows(IllegalArgumentException.class, () -> new Activity(0, "PT1H", "2025-10-03"), "Distance must be greater than 0");
+    }
+    @Test
+    void hasAverageSpeed() {
+        assertEquals(10,activity.getAverageSpeed());
+    }
+    @Test
+    void hasMinutesPerKilometer() {
+        assertEquals(6,activity.getMinutesPerKilometer());
     }
 }
