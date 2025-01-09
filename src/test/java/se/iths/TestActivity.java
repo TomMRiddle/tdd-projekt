@@ -33,10 +33,7 @@ public class TestActivity {
         Activity activityNow = new Activity(10, "PT1H");
         assertEquals(LocalDate.now(), activityNow.getStartDate());
     }
-    @Test
-    public void hasUniqueId() {
-        Activity activity2 = new Activity( 10, "PT1H", "2025-10-03");
-        assertNotEquals(activity2.getId(), activity.getId());
+
     }
     @Test
     public void throwsExceptionNoDuration() {

@@ -1,6 +1,7 @@
 package se.iths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 public class TestUser {
     
     private User user;
+   private Activity activity;
 
     @BeforeEach
 
@@ -16,6 +18,9 @@ public class TestUser {
         user.setHeight(100);
         user.setAge(10);
         user.setWeight(100);
+        activity = new Activity(10, "PT1H");
+
+
     }
 
 
@@ -49,7 +54,15 @@ public class TestUser {
 
     @Test 
     public void idStoredInHashmap() {
-        assertEquals();
+        user.addActivity(activity);
+        assertEquals(activity, user.getActivityByID("1"));
+    }
+
+    @Test
+    public void activityHasUniqueId() {
+        Activity activity2 = new Activity( 10, "PT1H", "2025-10-03");
+        assertNotEquals(activity2.getId(), activity.getId());
+
     }
 
 }
