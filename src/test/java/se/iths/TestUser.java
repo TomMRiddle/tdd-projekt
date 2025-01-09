@@ -1,9 +1,9 @@
 package se.iths;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TestUser {
@@ -53,8 +53,12 @@ public class TestUser {
     }
 
     @Test 
-    public void idStoredInHashmap() {
+    public void activityStoredInHashmap() {
         user.addActivity(activity);
-        assertEquals(activity, user.getActivityByID("1"));
+        assertEquals(activity,user.getActivityByID(activity.getId()));
     }
+//    @Test
+//    public void hasAverageSpeed() {
+//        assert(activity.getAverageSpeed());
+//    }
 }

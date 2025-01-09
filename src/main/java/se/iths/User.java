@@ -19,7 +19,7 @@ public class User {
         activities.put(activity.getId(), activity);
     }
     
-    String getName(){
+    public String getName(){
         return name;
     }
 
