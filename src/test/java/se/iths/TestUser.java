@@ -47,4 +47,9 @@ public class TestUser {
 
     }
 
+    @Test 
+    public void idStoredInHashmap() {
+        assertEquals();
+    }
+
 }

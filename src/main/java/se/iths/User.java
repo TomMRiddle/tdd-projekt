@@ -25,12 +25,12 @@ public class User {
         return weight;
     }
 
-    public void setWeight(int weight) {
-        this.weight = weight;
-    }
-
     public int getHeight() {
         return height;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
 
     public void setHeight(int height) {
