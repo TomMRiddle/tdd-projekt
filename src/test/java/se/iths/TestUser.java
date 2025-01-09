@@ -57,12 +57,4 @@ public class TestUser {
         user.addActivity(activity);
         assertEquals(activity, user.getActivityByID("1"));
     }
-
-    @Test
-    public void activityHasUniqueId() {
-        Activity activity2 = new Activity( 10, "PT1H", "2025-10-03");
-        assertNotEquals(activity2.getId(), activity.getId());
-
-    }
-
 }

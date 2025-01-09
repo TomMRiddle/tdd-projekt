@@ -9,7 +9,6 @@ public class User {
     private int weight;
     private int height;
     private HashMap <String, Activity> activities = new HashMap<>();
-    private int idCounter = 0;
 
     
     public User (String name){
@@ -17,7 +16,7 @@ public class User {
     }
 
     public void addActivity(Activity activity) {
-        activities.put(String.valueOf(++idCounter), activity);
+        activities.put(activity.getId(), activity);
     }
     
     String getName(){
