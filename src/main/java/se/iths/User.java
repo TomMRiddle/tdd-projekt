@@ -79,8 +79,8 @@ public class User {
     }
     public void printActivities() {
 
-        for (Map.Entry<String, Activity> entry : activities.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
+        for (Activity entry: activities.values()) {
+            System.out.println(entry);
         }
     }
 }

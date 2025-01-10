@@ -1,6 +1,7 @@
 package se.iths;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,11 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TestUser {
     private User user;
-    private Activity activity;
-    private Activity activity2;
+    private static Activity activity;
+    private static Activity activity2;
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
-
+    @BeforeAll
+    static void setupAll() {
+        activity = new Activity(10, "PT1H", "2025-01-01");
+        activity2 = new Activity(10, "PT1H", "2025-01-05");
+    }
     @BeforeEach
     void setup(){
         System.setOut(new PrintStream(outContent));
@@ -27,8 +32,6 @@ class TestUser {
         user.setHeight(100);
         user.setAge(10);
         user.setWeight(100);
-        activity = new Activity(10, "PT1H", "2025-01-01");
-        activity2 = new Activity(10,"PT1H", "2025-01-05");
     }
 
     @AfterEach
@@ -107,6 +110,6 @@ class TestUser {
         user.addActivity(activity);
         user.addActivity(activity2);
         user.printActivities();
-        assertEquals("Id:1, date:2025-01-01, duration:PT1H, distance:10\nId:2, date:2025-01-05, duration:PT1H, distance:10", outContent.toString());
+        assertEquals("Id:1, date:2025-01-01, duration:PT1H, distance:10\r\nId:2, date:2025-01-05, duration:PT1H, distance:10\r\n", outContent.toString());
     }
 }
