@@ -1,9 +1,7 @@
 package se.iths;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class Activity {
     private static int idCounter = 0;
