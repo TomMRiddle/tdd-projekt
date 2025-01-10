@@ -1,12 +1,10 @@
 package se.iths;
 
-import org.mockito.Mock;
-import org.mockito.Mockito;
-
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
+import java.util.OptionalDouble;
 
 
 public class User {
@@ -26,7 +24,7 @@ public class User {
     }
 
     public void addActivity(Activity activity) {
-        fitnessScore += activity.getDistance() + (activity.getAverageSpeed() / activity.getMinutesPerKilometer()) - getDaysSinceLastActivity() / 2;
+        fitnessScore += activity.getDistance() + (activity.getAverageSpeed() / activity.getMinutesPerKilometer()) - getDaysSinceLastActivity(activity.getStartDate()) / 2;
         latestActivityId = activity.getId();
         activities.put(activity.getId(), activity);
     }
@@ -66,10 +64,23 @@ public class User {
     private Activity getLatestActivity() {
         return getActivityById(latestActivityId);
     }
-    public int getDaysSinceLastActivity() {
-        return (getLatestActivity() == null ? 0 : (int)ChronoUnit.DAYS.between(getLatestActivity().getStartDate(), LocalDate.now()));
+    public int getDaysSinceLastActivity(LocalDate newDate) {
+        return (getLatestActivity() == null ? 0 : (int)ChronoUnit.DAYS.between(getLatestActivity().getStartDate(), newDate));
     }
     public int getFitnessScore() {
         return fitnessScore;
+    }
+
+    public int getTotalDistance() {
+        return activities.values().stream().mapToInt(Activity::getDistance).sum();
+    }
+    public double getAverageDistance() {
+        return activities.values().stream().mapToInt(Activity::getDistance).average().orElseThrow(NullPointerException::new);
+    }
+    public void printActivities() {
+
+        for (Map.Entry<String, Activity> entry : activities.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
     }
 }

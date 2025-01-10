@@ -41,4 +41,9 @@ public class Activity {
     public int getMinutesPerKilometer() {
         return (int)duration.toMinutes()/distance;
     }
+
+    @Override
+    public String toString() {
+        return "Id:"+id+", date:"+startDate+", duration:"+duration.toString()+", distance:"+distance;
+    }
 }
