@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 
 class TestUser {
+    private String lineSeparator = System.getProperty("line.separator");
     private User user;
     private static Activity activity;
     private static Activity activity2;
@@ -108,14 +109,14 @@ class TestUser {
         user.addActivity(activity);
         user.addActivity(activity2);
         user.printActivities();
-        assertEquals("Id:1, date:2025-01-01, duration:PT1H, distance:10\r\nId:2, date:2025-01-05, duration:PT1H, distance:10\r\n", outContent.toString());
+        assertEquals("Id:1, date:2025-01-01, duration:PT1H, distance:10" + lineSeparator + "Id:2, date:2025-01-05, duration:PT1H, distance:10" +lineSeparator, outContent.toString());
     }
 
     @Test
     void printsDetailsWhenGivenId(){
         user.addActivity(activity);
         user.printActivityById("1");
-         assertEquals( "Id:1, date:2025-01-01, duration:PT1H, distance:10\r\n", outContent.toString());
+         assertEquals( "Id:1, date:2025-01-01, duration:PT1H, distance:10" + lineSeparator, outContent.toString());
 
     }
 
