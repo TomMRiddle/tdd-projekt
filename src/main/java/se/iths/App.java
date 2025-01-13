@@ -5,7 +5,8 @@ import java.util.Scanner;
 
 public class App {
     private static Scanner scanner = new Scanner(System.in);
-    private static User user;
+    public static User user;
+    
     public static void main(String[] args) {
         createUser();
         createActivity();
@@ -65,20 +66,21 @@ public class App {
     }
 
     public static void createActivity() {
-        System.out.println("Enter a date in the format YYYY-MM-DD (ex.2025-09-01), leave empty for today's date: ");
-        String date = scanner.nextLine();
+
         System.out.println("Enter distance in kilometers:");
         int distance = Integer.parseInt(scanner.nextLine().trim());
         System.out.println("Enter elapsed time in the format HH:mm:ss");
         String timeInput = scanner.nextLine();
-
-        String[] timeParts = timeInput.split(":");
+                String[] timeParts = timeInput.split(":");
                 Duration duration = Duration.ofHours(Long.parseLong(timeParts[0]))
-                       .plusMinutes(Long.parseLong(timeParts[1]))
-                       .plusSeconds(Long.parseLong(timeParts[2]));
-
+                        .plusMinutes(Long.parseLong(timeParts[1]))
+                        .plusSeconds(Long.parseLong(timeParts[2]));
+        
+        System.out.println("Enter a date in the format YYYY-MM-DD (ex.2025-09-01), leave empty for today's date: ");
+        String date = scanner.nextLine();
         Activity activity = new Activity(distance, duration, date);
-        user.addActivity(activity);
         System.out.println(activity);
+        //user.addActivity(activity);
     }
-}
+ }
+

@@ -42,6 +42,6 @@ public class Activity {
 
     @Override
     public String toString() {
-        return "Id:"+id+", date:"+startDate+", duration:"+duration.toString()+", distance:"+distance;
+        return "Id: "+id+", Date: "+startDate+", Duration: "+duration.toString()+", Distance: "+distance;
     }
 }
