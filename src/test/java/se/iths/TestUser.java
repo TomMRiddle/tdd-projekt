@@ -1,17 +1,15 @@
 package se.iths;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.time.*;
-import java.time.temporal.ChronoUnit;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 class TestUser {
@@ -112,4 +110,13 @@ class TestUser {
         user.printActivities();
         assertEquals("Id:1, date:2025-01-01, duration:PT1H, distance:10\r\nId:2, date:2025-01-05, duration:PT1H, distance:10\r\n", outContent.toString());
     }
+
+    @Test
+    void printsDetailsWhenGivenId(){
+        user.addActivity(activity);
+        user.printActivityById("1");
+         assertEquals( "Id:1, date:2025-01-01, duration:PT1H, distance:10\r\n", outContent.toString());
+
+    }
+
 }
