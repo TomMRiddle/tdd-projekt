@@ -1,17 +1,18 @@
 package se.iths;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.time.Duration;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 class TestActivity {
     private Activity activity;
 
-    @BeforeEach
+    @BeforeAll
     void setup() {
         activity = new Activity(10, "PT1H", "2025-10-03");
     }
