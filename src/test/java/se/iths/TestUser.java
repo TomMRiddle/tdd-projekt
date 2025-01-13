@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -120,4 +121,10 @@ class TestUser {
 
     }
 
+    @Test
+    void throwsExceptionWhenIdNotFound() {
+        assertThrows(NullPointerException.class, () -> user.printActivityById("99"), "Id not found");
+    }
 }
+
+

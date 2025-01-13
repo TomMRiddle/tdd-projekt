@@ -1,5 +1,7 @@
 package se.iths;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -82,7 +84,13 @@ public class User {
         }
     }
 
-    public void printActivityById(String id) {
+    public void printActivityById(String id) throws NullPointerException {
+        if (!activities.containsKey(id)){
+            throw new NullPointerException("Id not found");
+        }
         System.out.println(activities.get(id));
+
     }
+
 }
+
