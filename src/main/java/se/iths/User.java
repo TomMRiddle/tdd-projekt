@@ -94,4 +94,9 @@ public class User {
         }
         activities.remove(id);
     }
+
+    @Override
+    public String toString() {
+        return "User created with:\nName: "+name+"\nAge: "+age+" years\nWeight: "+weight+" kg\nHeight: "+height+" cm";
+    }
 }

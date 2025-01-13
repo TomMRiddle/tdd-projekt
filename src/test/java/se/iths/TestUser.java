@@ -42,9 +42,7 @@ class TestUser {
 
     @Test
     void hasAName() {
-
         assertEquals("name", user.getName());
-
     }
 
     @Test
