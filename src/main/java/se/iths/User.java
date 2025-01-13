@@ -1,10 +1,8 @@
 package se.iths;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.time.temporal.ChronoUnit;
-import java.util.Map;
-import java.util.OptionalDouble;
+import java.util.HashMap;
 
 
 public class User {
@@ -82,5 +80,18 @@ public class User {
         for (Activity entry: activities.values()) {
             System.out.println(entry);
         }
+    }
+
+    public void printActivityById(String id) throws NullPointerException {
+        if(!activities.containsKey(id)) {
+            throw new NullPointerException("Id not found");
+        }
+        System.out.println(activities.get(id));
+    }
+    public void deleteActivityById(String id) throws NullPointerException {
+        if(!activities.containsKey(id)) {
+            throw new NullPointerException("Cannot delete non-existing activity: Activity Id not found");
+        }
+        activities.remove(id);
     }
 }
