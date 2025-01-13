@@ -14,7 +14,7 @@ class TestActivity {
 
     @BeforeAll
     void setup() {
-        activity = new Activity(10, "PT1H", "2025-10-03");
+        activity = new Activity(10, Duration.parse("PT1H"), "2025-10-03");
     }
 
     @Test
@@ -34,12 +34,12 @@ class TestActivity {
 
     @Test
     void hasStartDateNow() {
-        Activity activityNow = new Activity(10, "PT1H");
+        Activity activityNow = new Activity(10, Duration.parse("PT1H"));
         assertEquals(LocalDate.now(), activityNow.getStartDate());
     }
     @Test
     void hasUniqueId() {
-        Activity activity2 = new Activity( 10, "PT1H", "2025-10-03");
+        Activity activity2 = new Activity( 10, Duration.parse("PT1H"), "2025-10-03");
         assertNotEquals(activity2.getId(), activity.getId());
     }
     @Test
@@ -48,7 +48,7 @@ class TestActivity {
     }
     @Test
     void throwsExceptionWhenDistanceIsZero() {
-        assertThrows(IllegalArgumentException.class, () -> new Activity(0, "PT1H", "2025-10-03"), "Distance must be greater than 0");
+        assertThrows(IllegalArgumentException.class, () -> new Activity(0, Duration.parse("PT1H"), "2025-10-03"), "Distance must be greater than 0");
     }
     @Test
     void hasAverageSpeed() {

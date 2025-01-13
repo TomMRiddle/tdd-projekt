@@ -1,5 +1,6 @@
 package se.iths;
 
+import java.time.Duration;
 import java.util.Scanner;
 
 public class App {
@@ -7,6 +8,7 @@ public class App {
     private static User user;
     public static void main(String[] args) {
         createUser();
+        createActivity();
 //        System.out.println("""
 //                Meny:\s
 //                1. Skapa löprunda\s
@@ -47,13 +49,13 @@ public class App {
         //}
     }
     public static void createUser() {
-        System.out.println("Ange ditt namn:");
+        System.out.println("Enter name:");
         String name = scanner.nextLine();
-        System.out.println("Ange din längd i centimeter");
+        System.out.println("Enter a height in centimeters");
         int height = Integer.parseInt(scanner.nextLine());
-        System.out.println("Ange din vikt i kilogram");
+        System.out.println("Enter weight in kilograms");
         int weight = Integer.parseInt(scanner.nextLine());
-        System.out.println("Ange din ålder i år");
+        System.out.println("Enter age in years");
         int age = Integer.parseInt(scanner.nextLine());
         user = new User(name);
         user.setHeight(height);
@@ -63,13 +65,20 @@ public class App {
     }
 
     public static void createActivity() {
-        System.out.println("Ange datum i formatet YYYY-MM-DD, lämna tomt för dagens datum:");
+        System.out.println("Enter a date in the format YYYY-MM-DD (ex.2025-09-01), leave empty for today's date: ");
         String date = scanner.nextLine();
-        System.out.println("Ange distans i kilometer:");
-        int distance = Integer.parseInt(scanner.nextLine());
-        System.out.println("Ange tid i formatet HH:MM:SS");
-        String duration = scanner.nextLine();
+        System.out.println("Enter distance in kilometers:");
+        int distance = Integer.parseInt(scanner.nextLine().trim());
+        System.out.println("Enter elapsed time in the format HH:mm:ss");
+        String timeInput = scanner.nextLine();
+
+        String[] timeParts = timeInput.split(":");
+                Duration duration = Duration.ofHours(Long.parseLong(timeParts[0]))
+                       .plusMinutes(Long.parseLong(timeParts[1]))
+                       .plusSeconds(Long.parseLong(timeParts[2]));
+
         Activity activity = new Activity(distance, duration, date);
         user.addActivity(activity);
+        System.out.println(activity);
     }
 }

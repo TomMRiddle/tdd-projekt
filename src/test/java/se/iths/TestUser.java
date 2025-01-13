@@ -2,16 +2,17 @@ package se.iths;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.AfterEach;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 class TestUser {
@@ -23,8 +24,8 @@ class TestUser {
     private final PrintStream originalOut = System.out;
     @BeforeAll
     static void setupAll() {
-        activity = new Activity(10, "PT1H", "2025-01-01");
-        activity2 = new Activity(10, "PT1H", "2025-01-05");
+        activity = new Activity(10,Duration.parse("PT1H"), "2025-01-01");
+        activity2 = new Activity(10, Duration.parse("PT1H"), "2025-01-05");
     }
     @BeforeEach
     void setup(){
@@ -101,7 +102,7 @@ class TestUser {
     void hasAverageDistance() {
         user.addActivity(activity);
         user.addActivity(activity2);
-        user.addActivity(new Activity(40, "PT1H", "2025-01-06"));
+        user.addActivity(new Activity(40, Duration.parse("PT1H"), "2025-01-06"));
         assertEquals(20, user.getAverageDistance());
     }
     @Test
