@@ -82,7 +82,16 @@ public class User {
         }
     }
 
-    public void printActivityById(String id) {
+    public void printActivityById(String id) throws NullPointerException {
+        if(!activities.containsKey(id)) {
+            throw new NullPointerException("Id not found");
+        }
         System.out.println(activities.get(id));
+    }
+    public void deleteActivityById(String id) throws NullPointerException {
+        if(!activities.containsKey(id)) {
+            throw new NullPointerException("Cannot delete non-existing activity: Activity Id not found");
+        }
+        activities.remove(id);
     }
 }

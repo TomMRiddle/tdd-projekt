@@ -6,10 +6,12 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class TestUser {
@@ -117,7 +119,20 @@ class TestUser {
         user.addActivity(activity);
         user.printActivityById("1");
          assertEquals( "Id:1, date:2025-01-01, duration:PT1H, distance:10" + lineSeparator, outContent.toString());
-
+    }
+    @Test
+    void throwsExceptionWhenActivityIdNotFound() {
+        assertThrows(NullPointerException.class, () -> user.printActivityById("99"), "Id not found");
     }
 
+    @Test
+    void deleteActivityWhenGivenId() {
+        user.addActivity(activity);
+        user.deleteActivityById("1");
+        assertNotEquals(activity, user.getActivityById("1"));
+    }
+    @Test
+    void throwsExceptionWhenDeletingNonExistingActivity() {
+        assertThrows(NullPointerException.class, () -> user.deleteActivityById("99"), "Cannot delete non-existing activity: Activity Id not found");
+    }
 }
