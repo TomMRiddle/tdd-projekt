@@ -5,46 +5,56 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-public class TestActivity {
+class TestActivity {
     private Activity activity;
+
     @BeforeEach
-    public void setup() {
+    void setup() {
         activity = new Activity(10, "PT1H", "2025-10-03");
     }
+
     @Test
-    public void hasDistance() {
+    void hasDistance() {
         assertEquals(10, activity.getDistance());
     }
+
     @Test
-    public void hasDuration() {
+    void hasDuration() {
         assertEquals(Duration.ofHours(1), activity.getDuration());
     }
+
     @Test
-    public void hasStartDate() {
+    void hasStartDate() {
         assertEquals(LocalDate.parse("2025-10-03"), activity.getStartDate());
     }
+
     @Test
-    public void hasStartDateNow() {
+    void hasStartDateNow() {
         Activity activityNow = new Activity(10, "PT1H");
         assertEquals(LocalDate.now(), activityNow.getStartDate());
     }
     @Test
-    public void hasUniqueId() {
+    void hasUniqueId() {
         Activity activity2 = new Activity( 10, "PT1H", "2025-10-03");
         assertNotEquals(activity2.getId(), activity.getId());
     }
     @Test
-    public void throwsExceptionNoDuration() {
-        assertThrows(Exception.class, () -> new Activity( 10, null, "2025-10-03"));
+    void throwsExceptionWhenDurationIsNull() {
+        assertThrows(NullPointerException.class, () -> new Activity(10, null, "2025-10-03"));
     }
     @Test
-    public void throwsExceptionNoDistance() {
-        assertThrows(IllegalArgumentException.class, () -> new Activity( 0, "PT1H", "2025-10-03"), "Distance must be greater than 0");
+    void throwsExceptionWhenDistanceIsZero() {
+        assertThrows(IllegalArgumentException.class, () -> new Activity(0, "PT1H", "2025-10-03"), "Distance must be greater than 0");
     }
-
+    @Test
+    void hasAverageSpeed() {
+        assertEquals(10,activity.getAverageSpeed());
+    }
+    @Test
+    void hasMinutesPerKilometer() {
+        assertEquals(6,activity.getMinutesPerKilometer());
+    }
 }

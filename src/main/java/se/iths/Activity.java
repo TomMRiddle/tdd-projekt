@@ -1,9 +1,7 @@
 package se.iths;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class Activity {
     private static int idCounter = 0;
@@ -17,7 +15,6 @@ public class Activity {
         }
         this.id = String.valueOf(++idCounter);
         this.distance = distance;
-
         this.startDate = LocalDate.parse(startDate);
         this.duration = Duration.parse(duration);
     }
@@ -33,8 +30,18 @@ public class Activity {
     public LocalDate getStartDate() {
         return startDate;
     }
-
     public String getId() {
         return id;
+    }
+    public int getAverageSpeed() {
+        return distance/(int)duration.toHours();
+    }
+    public int getMinutesPerKilometer() {
+        return (int)duration.toMinutes()/distance;
+    }
+
+    @Override
+    public String toString() {
+        return "Id:"+id+", date:"+startDate+", duration:"+duration.toString()+", distance:"+distance;
     }
 }
