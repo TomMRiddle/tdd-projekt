@@ -6,6 +6,8 @@ import java.io.PrintStream;
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,32 +19,25 @@ public class TestApp {
     
     public static User user;
     private static Activity activity;
-
-    @BeforeEach
-    void setup(){
+    private static ByteArrayOutputStream outputStream;
+    @BeforeAll
+    static void setupBeforeAll() {
+        outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+        activity = new Activity(10,Duration.parse("PT1H"), "2025-01-01");
         user = new User("name");
         user.setHeight(100);
         user.setAge(10);
         user.setWeight(100);
-        activity = new Activity(10,Duration.parse("PT1H"), "2025-01-01");
     }
-
-    // @Test 
-    // void testPrintsExistingActivitiesWhenActivityExists() {
-    //     user.addActivity(activity);
-    //     assert
-    // }
 
     @Test
     void testCreateActivity() {
+
         // Simulate user input
         String simulatedInput = "10\n01:00:00\n2025-10-03\n";
         ByteArrayInputStream in = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(in);
-
-        // Capture console output
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStream));
 
         // Run the main method
         createActivity();
@@ -59,10 +54,6 @@ public class TestApp {
         String simulatedInput = "Alice\n170\n70\n30\n";
         ByteArrayInputStream in = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(in);
-
-        // Capture console output
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStream));
 
         // Run the method
         createUser();
