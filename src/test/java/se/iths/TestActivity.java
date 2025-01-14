@@ -10,10 +10,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class TestActivity {
-    private Activity activity;
+    private static Activity activity;
 
     @BeforeAll
-    void setup() {
+    static void setup() {
         activity = new Activity(10, Duration.parse("PT1H"), "2025-10-03");
     }
 

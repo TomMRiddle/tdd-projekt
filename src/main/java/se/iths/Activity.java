@@ -9,9 +9,15 @@ public class Activity {
     private int distance;
     private Duration duration;
     private LocalDate startDate;
-    public Activity(int distance, Duration duration, String startDate) throws IllegalArgumentException {
+    public Activity(int distance, Duration duration, String startDate) throws IllegalArgumentException, NullPointerException {
         if(distance == 0) {
             throw new IllegalArgumentException("Distance must be greater than 0");
+        }
+        if(duration == null) {
+            throw new NullPointerException("No duration found");
+        }
+        if(duration == Duration.ofMillis(0)) {
+            throw new IllegalArgumentException("Duration must be greater than 0");
         }
         this.id = String.valueOf(++idCounter);
         this.distance = distance;
@@ -42,6 +48,6 @@ public class Activity {
 
     @Override
     public String toString() {
-        return "Id: "+id+", Date: "+startDate+", Duration: "+duration.toString()+", Distance: "+distance;
+        return "Id: "+id+", Date: "+startDate+", Duration: "+duration.toString()+", Distance: "+distance+ " km";
     }
 }

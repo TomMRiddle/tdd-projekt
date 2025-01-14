@@ -40,7 +40,7 @@ public class TestApp {
 
         // Verify the output
         String output = outputStream.toString();
-        assertTrue(output.contains("Distance: 10"));
+        assertTrue(output.contains("Distance: 10 km"));
         assertTrue(output.contains("Duration: PT1H"));
         assertTrue(output.contains("Date: 2025-10-03"));
     }

@@ -110,14 +110,14 @@ class TestUser {
         user.addActivity(activity);
         user.addActivity(activity2);
         user.printActivities();
-        assertEquals("Id:1, date:2025-01-01, duration:PT1H, distance:10" + lineSeparator + "Id:2, date:2025-01-05, duration:PT1H, distance:10" +lineSeparator, outContent.toString());
+        assertEquals("Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator + "Id: 2, Date: 2025-01-05, Duration: PT1H, Distance: 10 km" +lineSeparator, outContent.toString());
     }
 
     @Test
     void printsDetailsWhenGivenId(){
         user.addActivity(activity);
         user.printActivityById("1");
-         assertEquals( "Id:1, date:2025-01-01, duration:PT1H, distance:10" + lineSeparator, outContent.toString());
+         assertEquals( "Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator, outContent.toString());
     }
     @Test
     void throwsExceptionWhenActivityIdNotFound() {
