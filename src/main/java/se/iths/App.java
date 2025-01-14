@@ -35,9 +35,7 @@ public class App {
                printExistingActivities();
                break;
         case "3":
-               System.out.println("Enter an activity Id ");
-               String id = scanner.nextLine();
-               user.printActivityById(id);
+               printDetailsOfAnActivity();
                break;
         case "4":
                while(true) {
@@ -98,8 +96,24 @@ public class App {
     }
 
     public static void printExistingActivities() {
-        if (user.get)
+        if (user.hasActivity())
         user.printActivities();
+        else {
+            System.out.println("No previous activity to print");
+        }
     }
- }
+
+    public static void printDetailsOfAnActivity(){
+        try {
+            System.out.println("Enter an activity Id ");
+            String id = scanner.nextLine();
+             user.printActivityById(id);
+        } catch (IllegalArgumentException e) { 
+            System.out.println(e);
+        }
+
+        }
+    
+    }
+ 
 
