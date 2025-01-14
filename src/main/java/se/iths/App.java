@@ -6,49 +6,63 @@ import java.util.Scanner;
 public class App {
     private static Scanner scanner = new Scanner(System.in);
     public static User user;
+    private static boolean menuLoop = true;
     
     public static void main(String[] args) {
         createUser();
-        createActivity();
-//        System.out.println("""
-//                Meny:\s
-//                1. Skapa löprunda\s
-//                2. Lista alla löprundor\s
-//                3. Visa detaljer för en löprunda\s
-//                4. Ta bort en löprunda\s
-//                """
-//        );
-//        String input = scanner.nextLine();
-//        switch (input) {
-//            case "1":
-        
-              
-//            case "2":
-//                user.printActivities();
-//                break;
-//            case "3":
-//                System.out.println("Ange ett id för en löprunda");
-//                String id = scanner.nextLine();
-//                user.printActivityById(id);
-//                break;
-//            case "4":
-//                while(true) {
-//                    System.out.println("Ange ett id för en löprunda");
-//                    String id2 = scanner.nextLine();
-//                    try {
-//                        System.out.println("Vill du ta bort följande löprunda? (ja/nej)");
-//                        user.printActivityById(id2);
-//                        if(scanner.nextLine().equals("ja")) {
-//                            user.deleteActivityById(id2);
-//                            System.out.println("Löprunda med id " + id2 + " har tagits bort");
-//                            break;
-//                        }
-//                    } catch (NullPointerException e) {
-//                        System.out.println(e);
-//                    }
-//                }
-        //}
+
+        while (menuLoop) {
+            menu();
+        }
     }
+    
+    public static void menu() {
+       System.out.println("""
+               Menu:\s
+               1. Register activity\s
+               2. Display all activity\s
+               3. Show details for an activity\s
+               4. Remove an activity\s
+               5. Quit\s
+               """
+    );
+   String input = scanner.nextLine();
+    switch (input) {
+        case "1":
+                createActivity();
+                break;   
+        case "2":
+               printExistingActivities();
+               break;
+        case "3":
+               System.out.println("Enter an activity Id ");
+               String id = scanner.nextLine();
+               user.printActivityById(id);
+               break;
+        case "4":
+               while(true) {
+                   System.out.println("Enter an activity Id");
+                   String id2 = scanner.nextLine();
+                   try {
+                       System.out.println("Would you like to remove this activity? (yes/no)");
+                       user.printActivityById(id2);
+                       if(scanner.nextLine().equals("yes")) {
+                           user.deleteActivityById(id2);
+                           System.out.println("Activity with Id " + id2 + " has been removed");
+                           break;
+                       }
+                   } catch (NullPointerException e) {
+                       System.out.println(e);
+                   }
+                }
+
+        case "5":
+                menuLoop = false;
+                break;
+        }
+    }
+        
+    
     public static void createUser() {
         System.out.println("Enter name:");
         String name = scanner.nextLine();
@@ -81,6 +95,11 @@ public class App {
         Activity activity = new Activity(distance, duration, date);
         System.out.println(activity);
         //user.addActivity(activity);
+    }
+
+    public static void printExistingActivities() {
+        if (user.get)
+        user.printActivities();
     }
  }
 

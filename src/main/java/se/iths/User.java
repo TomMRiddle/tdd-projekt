@@ -26,6 +26,10 @@ public class User {
         latestActivityId = activity.getId();
         activities.put(activity.getId(), activity);
     }
+
+    public boolean hasActivity() {
+        return !activities.isEmpty();
+    }
     
     public String getName(){
         return name;

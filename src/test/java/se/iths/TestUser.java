@@ -10,6 +10,8 @@ import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -133,5 +135,11 @@ class TestUser {
     @Test
     void throwsExceptionWhenDeletingNonExistingActivity() {
         assertThrows(NullPointerException.class, () -> user.deleteActivityById("99"), "Cannot delete non-existing activity: Activity Id not found");
+    }
+
+    @Test
+    void hasActivityTrueWhenActivitiesExist() {
+        user.addActivity(activity);
+        assertTrue(user.hasActivity());
     }
 }

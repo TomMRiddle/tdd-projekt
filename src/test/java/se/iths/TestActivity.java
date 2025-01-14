@@ -51,6 +51,10 @@ class TestActivity {
         assertThrows(IllegalArgumentException.class, () -> new Activity(0, Duration.parse("PT1H"), "2025-10-03"), "Distance must be greater than 0");
     }
     @Test
+    void throwsExceptionWhenDurationIsZero() {
+        assertThrows(IllegalArgumentException.class, () -> new Activity(10, Duration.parse("PT0H"), "2025-10-03"), "Distance must be greater than 0");
+    }
+    @Test
     void hasAverageSpeed() {
         assertEquals(10,activity.getAverageSpeed());
     }
