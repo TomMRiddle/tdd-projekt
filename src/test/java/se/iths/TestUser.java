@@ -2,16 +2,18 @@ package se.iths;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.AfterEach;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 class TestUser {
@@ -23,8 +25,8 @@ class TestUser {
     private final PrintStream originalOut = System.out;
     @BeforeAll
     static void setupAll() {
-        activity = new Activity(10, "PT1H", "2025-01-01");
-        activity2 = new Activity(10, "PT1H", "2025-01-05");
+        activity = new Activity(10,Duration.parse("PT1H"), "2025-01-01");
+        activity2 = new Activity(10, Duration.parse("PT1H"), "2025-01-05");
     }
     @BeforeEach
     void setup(){
@@ -42,9 +44,7 @@ class TestUser {
 
     @Test
     void hasAName() {
-
         assertEquals("name", user.getName());
-
     }
 
     @Test
@@ -103,7 +103,7 @@ class TestUser {
     void hasAverageDistance() {
         user.addActivity(activity);
         user.addActivity(activity2);
-        user.addActivity(new Activity(40, "PT1H", "2025-01-06"));
+        user.addActivity(new Activity(40, Duration.parse("PT1H"), "2025-01-06"));
         assertEquals(20, user.getAverageDistance());
     }
     @Test
@@ -111,14 +111,14 @@ class TestUser {
         user.addActivity(activity);
         user.addActivity(activity2);
         user.printActivities();
-        assertEquals("Id:1, date:2025-01-01, duration:PT1H, distance:10" + lineSeparator + "Id:2, date:2025-01-05, duration:PT1H, distance:10" +lineSeparator, outContent.toString());
+        assertEquals("Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator + "Id: 2, Date: 2025-01-05, Duration: PT1H, Distance: 10 km" +lineSeparator, outContent.toString());
     }
 
     @Test
     void printsDetailsWhenGivenId(){
         user.addActivity(activity);
         user.printActivityById("1");
-         assertEquals( "Id:1, date:2025-01-01, duration:PT1H, distance:10" + lineSeparator, outContent.toString());
+         assertEquals( "Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator, outContent.toString());
     }
     @Test
     void throwsExceptionWhenActivityIdNotFound() {
@@ -134,5 +134,11 @@ class TestUser {
     @Test
     void throwsExceptionWhenDeletingNonExistingActivity() {
         assertThrows(NullPointerException.class, () -> user.deleteActivityById("99"), "Cannot delete non-existing activity: Activity Id not found");
+    }
+
+    @Test
+    void hasActivityTrueWhenActivitiesExist() {
+        user.addActivity(activity);
+        assertTrue(user.hasActivity());
     }
 }

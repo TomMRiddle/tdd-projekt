@@ -26,6 +26,10 @@ public class User {
         latestActivityId = activity.getId();
         activities.put(activity.getId(), activity);
     }
+
+    public boolean hasActivity() {
+        return !activities.isEmpty();
+    }
     
     public String getName(){
         return name;
@@ -93,5 +97,10 @@ public class User {
             throw new NullPointerException("Cannot delete non-existing activity: Activity Id not found");
         }
         activities.remove(id);
+    }
+
+    @Override
+    public String toString() {
+        return "User created with:\nName: "+name+"\nAge: "+age+" years\nWeight: "+weight+" kg\nHeight: "+height+" cm";
     }
 }

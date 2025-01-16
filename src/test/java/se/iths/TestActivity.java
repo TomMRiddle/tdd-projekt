@@ -1,19 +1,20 @@
 package se.iths;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.time.Duration;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 class TestActivity {
-    private Activity activity;
+    private static Activity activity;
 
-    @BeforeEach
-    void setup() {
-        activity = new Activity(10, "PT1H", "2025-10-03");
+    @BeforeAll
+    static void setup() {
+        activity = new Activity(10, Duration.parse("PT1H"), "2025-10-03");
     }
 
     @Test
@@ -33,12 +34,12 @@ class TestActivity {
 
     @Test
     void hasStartDateNow() {
-        Activity activityNow = new Activity(10, "PT1H");
+        Activity activityNow = new Activity(10, Duration.parse("PT1H"));
         assertEquals(LocalDate.now(), activityNow.getStartDate());
     }
     @Test
     void hasUniqueId() {
-        Activity activity2 = new Activity( 10, "PT1H", "2025-10-03");
+        Activity activity2 = new Activity( 10, Duration.parse("PT1H"), "2025-10-03");
         assertNotEquals(activity2.getId(), activity.getId());
     }
     @Test
@@ -47,7 +48,11 @@ class TestActivity {
     }
     @Test
     void throwsExceptionWhenDistanceIsZero() {
-        assertThrows(IllegalArgumentException.class, () -> new Activity(0, "PT1H", "2025-10-03"), "Distance must be greater than 0");
+        assertThrows(IllegalArgumentException.class, () -> new Activity(0, Duration.parse("PT1H"), "2025-10-03"), "Distance must be greater than 0");
+    }
+    @Test
+    void throwsExceptionWhenDurationIsZero() {
+        assertThrows(IllegalArgumentException.class, () -> new Activity(10, Duration.parse("PT0H"), "2025-10-03"), "Distance must be greater than 0");
     }
     @Test
     void hasAverageSpeed() {
