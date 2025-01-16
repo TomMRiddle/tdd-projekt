@@ -1,5 +1,6 @@
 package se.iths;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -14,21 +15,22 @@ public class User {
     private int fitnessScore;
     private HashMap <String, Record> records = new HashMap<>();
     private String latestRecordById;
-
+    private FileStorage fileStorage;
     
-    public User (String name){
+    public User (String name, FileStorage fileStorage) {
+        this.fileStorage = fileStorage;
         this.name = name;
         this.fitnessScore = 0;
     }
 
-    public void addRecord(Record record) {
+    public void addRecord(Record record) throws IOException {
         fitnessScore += record.getDistance() + (record.getAverageSpeed() / record.getMinutesPerKilometer()) - getDaysSinceLastRecord(record.getStartDate()) / 2;
         latestRecordById = record.getId();
-        records.put(record.getId(), record);
+        fileStorage.createRecord(record.getId(), record.getDistance(), (int) record.getDuration().toSeconds(), record.getStartDate());
     }
 
     public boolean hasRecord() {
-        return !records.isEmpty();
+        return !fileStorage.getRecordIDs().isEmpty();
     }
     
     public String getName(){
@@ -47,8 +49,8 @@ public class User {
         return height;
     }
 
-    public Record getRecordById(String id) {
-        return records.get(id);
+    public Record getRecordById(String id) throws IOException {
+        return fileStorage.readRecord(id);
     }
 
     public void setWeight(int weight) {
@@ -63,10 +65,10 @@ public class User {
         this.age = age;
     }
 
-    private Record getLatestRecord() {
+    private Record getLatestRecord() throws IOException {
         return getRecordById(latestRecordById);
     }
-    public int getDaysSinceLastRecord(LocalDate newDate) {
+    public int getDaysSinceLastRecord(LocalDate newDate) throws IOException {
         return (getLatestRecord() == null ? 0 : (int)ChronoUnit.DAYS.between(getLatestRecord().getStartDate(), newDate));
     }
     public int getFitnessScore() {
@@ -80,10 +82,13 @@ public class User {
         return records.values().stream().mapToInt(se.iths.Record::getDistance).average().orElseThrow(NullPointerException::new);
     }
     public void printRecords() {
-
-        for (Record entry: records.values()) {
-            System.out.println(entry);
-        }
+        fileStorage.getRecordIDs().stream().forEach(recordId -> {
+            try {
+                System.out.println(fileStorage.readRecord(recordId));
+            } catch (IOException e) {
+                throw new NullPointerException(e.getMessage());
+            }
+        });
     }
 
     public void printRecordById(String id) throws NullPointerException {

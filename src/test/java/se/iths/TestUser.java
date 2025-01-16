@@ -1,20 +1,24 @@
 package se.iths;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 class TestUser {
     private final String lineSeparator = System.lineSeparator();
@@ -24,8 +28,12 @@ class TestUser {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
 
+    @Mock
+    private static FileStorage fileStorage;
+
     @BeforeAll
     static void setupAll() {
+        fileStorage = mock(FileStorage.class);
         record = new Record(10,Duration.parse("PT1H"), "2025-01-01");
         record2 = new Record(10, Duration.parse("PT1H"), "2025-01-05");
     }
@@ -33,7 +41,7 @@ class TestUser {
     @BeforeEach
     void setup() {
         System.setOut(new PrintStream(outContent));
-        user = new User("name");
+        user = new User("name", fileStorage);
         user.setHeight(100);
         user.setAge(10);
         user.setWeight(100);
@@ -65,44 +73,50 @@ class TestUser {
     }
 
     @Test
-    void recordStored() {
+    void recordStored() throws IOException {
         user.addRecord(record);
+        verify(fileStorage, atLeast(1)).createRecord(record.getId(), record.getDistance(), (int) record.getDuration().toSeconds(), record.getStartDate());
+        when(fileStorage.readRecord(record.getId())).thenReturn(record);
         assertEquals(record,user.getRecordById(record.getId()));
     }
 
     @Test
-    void hasDaysSinceLastRecord() {
+    void hasDaysSinceLastRecord() throws IOException {
         user.addRecord(record);
         assertEquals(ChronoUnit.DAYS.between(LocalDate.parse("2025-01-01"), record.getStartDate()), user.getDaysSinceLastRecord(record.getStartDate()));
     }
 
     @Test
     void hasZeroDaysSinceLastRecordWhenNoPreviousRecord() {
-        assertEquals(0, user.getDaysSinceLastRecord(record.getStartDate()));
+        try {
+            assertEquals(0, user.getDaysSinceLastRecord(record.getStartDate()));
+        } catch (IOException e) {
+            fail("IOException thrown when trying to get date from record");
+        }
     }
 
     @Test
-    void hasFitnessScoreFirstRecord() {
+    void hasFitnessScoreFirstRecord() throws IOException {
         user.addRecord(record);
         assertEquals(11,user.getFitnessScore());
     }
 
     @Test
-    void hasFitnessScoreSecondRecord() {
+    void hasFitnessScoreSecondRecord() throws IOException {
         user.addRecord(record);
         user.addRecord(record2);
         assertEquals(20,user.getFitnessScore());
     }
 
     @Test
-    void hasTotalDistance() {
+    void hasTotalDistance() throws IOException {
         user.addRecord(record);
         user.addRecord(record2);
         assertEquals(20, user.getTotalDistance());
     }
 
     @Test
-    void hasAverageDistance() {
+    void hasAverageDistance() throws IOException {
         user.addRecord(record);
         user.addRecord(record2);
         user.addRecord(new Record(40, Duration.parse("PT1H"), "2025-01-06"));
@@ -110,15 +124,16 @@ class TestUser {
     }
 
     @Test
-    void printsAllRecords() {
-        user.addRecord(record);
-        user.addRecord(record2);
+    void printsAllRecords() throws IOException {
+        when(fileStorage.getRecordIDs()).thenReturn(Arrays.asList(record.getId(),record2.getId()));
+        when(fileStorage.readRecord(record.getId())).thenReturn(record);
+        when(fileStorage.readRecord(record2.getId())).thenReturn(record2);
         user.printRecords();
         assertEquals("Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator + "Id: 2, Date: 2025-01-05, Duration: PT1H, Distance: 10 km" +lineSeparator, outContent.toString());
     }
 
     @Test
-    void printsDetailsWhenGivenId(){
+    void printsDetailsWhenGivenId() throws IOException {
         user.addRecord(record);
         user.printRecordById("1");
          assertEquals( "Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator, outContent.toString());
@@ -130,7 +145,7 @@ class TestUser {
     }
 
     @Test
-    void deleteRecordWhenGivenId() {
+    void deleteRecordWhenGivenId() throws IOException {
         user.addRecord(record);
         user.deleteRecordById("1");
         assertNotEquals(record, user.getRecordById("1"));
@@ -142,8 +157,9 @@ class TestUser {
     }
 
     @Test
-    void hasRecordTrueWhenRecordsExist() {
+    void hasRecordTrueWhenRecordsExist() throws IOException {
         user.addRecord(record);
+        when(fileStorage.getRecordIDs()).thenReturn(new ArrayList<String>(List.of("1")));
         assertTrue(user.hasRecord());
     }
 }
