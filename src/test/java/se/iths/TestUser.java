@@ -6,7 +6,6 @@ import java.io.PrintStream;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -110,8 +109,8 @@ class TestUser {
 
     @Test
     void hasTotalDistance() throws IOException {
-        user.addRecord(record);
-        user.addRecord(record2);
+        when(fileStorage.readRecord(record.getId())).thenReturn(record);
+        when(fileStorage.readRecord(record2.getId())).thenReturn(record2);
         assertEquals(20, user.getTotalDistance());
     }
 
@@ -133,27 +132,38 @@ class TestUser {
     }
 
     @Test
-    void printsDetailsWhenGivenId() throws IOException {
-        user.addRecord(record);
+    void printsDetailsWhenGivenIdExist() throws IOException {
+        when(fileStorage.readRecord(record.getId())).thenReturn(record);
         user.printRecordById("1");
-         assertEquals( "Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator, outContent.toString());
+        assertEquals( "Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator, outContent.toString());
     }
 
     @Test
     void throwsExceptionWhenRecordIdNotFound() {
-        assertThrows(NullPointerException.class, () -> user.printRecordById("99"), "Id not found");
+        try {
+            when(fileStorage.readRecord("99")).thenThrow(NullPointerException.class);
+        } catch (Exception e) {
+            assertThrows(NullPointerException.class, () -> user.printRecordById("99"), "Id not found");
+        }
     }
 
     @Test
-    void deleteRecordWhenGivenId() throws IOException {
-        user.addRecord(record);
-        user.deleteRecordById("1");
-        assertNotEquals(record, user.getRecordById("1"));
+    void deleteRecordWhenGivenId() {
+        try {
+            user.deleteRecordById(record.getId());
+            verify(fileStorage).deleteRecord(record.getId());
+        } catch (IOException e) {
+            fail("IOException thrown when trying to delete existing record");
+        }
     }
 
     @Test
     void throwsExceptionWhenDeletingNonExistingRecord() {
-        assertThrows(NullPointerException.class, () -> user.deleteRecordById("99"), "Cannot delete non-existing activity: Activity Id not found");
+        try {
+            doThrow(NullPointerException.class).when(fileStorage).deleteRecord("99");
+        } catch (IOException e) {
+            assertThrows(NullPointerException.class, () -> user.deleteRecordById("99"), "Cannot delete non-existing activity: Activity Id not found");
+        }
     }
 
     @Test

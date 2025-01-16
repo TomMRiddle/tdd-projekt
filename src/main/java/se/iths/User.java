@@ -76,6 +76,7 @@ public class User {
     }
 
     public int getTotalDistance() {
+        //refactor to use fileStorage
         return records.values().stream().mapToInt(se.iths.Record::getDistance).sum();
     }
     public double getAverageDistance() {
@@ -91,17 +92,19 @@ public class User {
         });
     }
 
-    public void printRecordById(String id) throws NullPointerException {
-        if(!records.containsKey(id)) {
+    public void printRecordById(String id) {
+        try {
+            System.out.println(fileStorage.readRecord(id));
+        } catch (IOException e) {
             throw new NullPointerException("Id not found");
         }
-        System.out.println(records.get(id));
     }
     public void deleteRecordById(String id) throws NullPointerException {
-        if(!records.containsKey(id)) {
+        try {
+            fileStorage.deleteRecord(id);
+        } catch (IOException e) {
             throw new NullPointerException("Cannot delete non-existing activity: Activity Id not found");
         }
-        records.remove(id);
     }
 
     @Override
