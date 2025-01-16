@@ -12,7 +12,7 @@ public class User {
     private int weight;
     private int height;
     private int fitnessScore;
-    protected HashMap <String, Record> records = new HashMap<>();
+    private HashMap <String, Record> records = new HashMap<>();
     private String latestRecordById;
 
     
