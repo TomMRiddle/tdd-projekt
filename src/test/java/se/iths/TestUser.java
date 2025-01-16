@@ -11,25 +11,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
+
 class TestUser {
-    private String lineSeparator = System.getProperty("line.separator");
+    private String lineSeparator = System.lineSeparator();
     private User user;
-    private static Activity activity;
-    private static Activity activity2;
+    private static Record record;
+    private static Record record2;
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+
     @BeforeAll
     static void setupAll() {
-        activity = new Activity(10,Duration.parse("PT1H"), "2025-01-01");
-        activity2 = new Activity(10, Duration.parse("PT1H"), "2025-01-05");
+        record = new Record(10,Duration.parse("PT1H"), "2025-01-01");
+        record2 = new Record(10, Duration.parse("PT1H"), "2025-01-05");
     }
     @BeforeEach
-    void setup(){
+    void setup() {
+
         System.setOut(new PrintStream(outContent));
         user = new User("name");
         user.setHeight(100);
@@ -37,8 +41,9 @@ class TestUser {
         user.setWeight(100);
     }
 
+
     @AfterEach
-    public void restoreStreams() {
+    void restoreStreams() {
         System.setOut(originalOut);
     }
 
@@ -70,75 +75,75 @@ class TestUser {
 
     @Test
     void activityStoredInHashmap() {
-        user.addActivity(activity);
-        assertEquals(activity,user.getActivityById(activity.getId()));
+        user.addRecord(record);
+        assertEquals(record,user.getRecordById(record.getId()));
     }
     @Test
     void hasDaysSinceLastActivity() {
-        user.addActivity(activity);
-        assertEquals(ChronoUnit.DAYS.between(LocalDate.parse("2025-01-01"), activity.getStartDate()), user.getDaysSinceLastActivity(activity.getStartDate()));
+        user.addRecord(record);
+        assertEquals(ChronoUnit.DAYS.between(LocalDate.parse("2025-01-01"), record.getStartDate()), user.getDaysSinceLastRecord(record.getStartDate()));
     }
     @Test
     void hasZeroDaysSinceLastActivityWhenNoPreviousActivity() {
-        assertEquals(0, user.getDaysSinceLastActivity(activity.getStartDate()));
+        assertEquals(0, user.getDaysSinceLastRecord(record.getStartDate()));
     }
     @Test
     void hasFitnessScoreFirstActivity() {
-        user.addActivity(activity);
+        user.addRecord(record);
         assertEquals(11,user.getFitnessScore());
     }
     @Test
     void hasFitnessScoreSecondActivity() {
-        user.addActivity(activity);
-        user.addActivity(activity2);
+        user.addRecord(record);
+        user.addRecord(record2);
         assertEquals(20,user.getFitnessScore());
     }
     @Test
     void hasTotalDistance() {
-        user.addActivity(activity);
-        user.addActivity(activity2);
+        user.addRecord(record);
+        user.addRecord(record2);
         assertEquals(20, user.getTotalDistance());
     }
     @Test
     void hasAverageDistance() {
-        user.addActivity(activity);
-        user.addActivity(activity2);
-        user.addActivity(new Activity(40, Duration.parse("PT1H"), "2025-01-06"));
+        user.addRecord(record);
+        user.addRecord(record2);
+        user.addRecord(new Record(40, Duration.parse("PT1H"), "2025-01-06"));
         assertEquals(20, user.getAverageDistance());
     }
     @Test
     void printsAllActivities() {
-        user.addActivity(activity);
-        user.addActivity(activity2);
-        user.printActivities();
+        user.addRecord(record);
+        user.addRecord(record2);
+        user.printRecords();
         assertEquals("Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator + "Id: 2, Date: 2025-01-05, Duration: PT1H, Distance: 10 km" +lineSeparator, outContent.toString());
     }
 
     @Test
     void printsDetailsWhenGivenId(){
-        user.addActivity(activity);
-        user.printActivityById("1");
+        user.addRecord(record);
+        user.printRecordById("1");
          assertEquals( "Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator, outContent.toString());
     }
     @Test
     void throwsExceptionWhenActivityIdNotFound() {
-        assertThrows(NullPointerException.class, () -> user.printActivityById("99"), "Id not found");
+        assertThrows(NullPointerException.class, () -> user.printRecordById("99"), "Id not found");
     }
 
     @Test
     void deleteActivityWhenGivenId() {
-        user.addActivity(activity);
-        user.deleteActivityById("1");
-        assertNotEquals(activity, user.getActivityById("1"));
+        user.addRecord(record);
+        user.deleteRecordById("1");
+        assertNotEquals(record, user.getRecordById("1"));
     }
     @Test
     void throwsExceptionWhenDeletingNonExistingActivity() {
-        assertThrows(NullPointerException.class, () -> user.deleteActivityById("99"), "Cannot delete non-existing activity: Activity Id not found");
+        assertThrows(NullPointerException.class, () -> user.deleteRecordById("99"), "Cannot delete non-existing activity: Activity Id not found");
     }
 
     @Test
-    void hasActivityTrueWhenActivitiesExist() {
-        user.addActivity(activity);
-        assertTrue(user.hasActivity());
+    void hasRecordTrueWhenActivitiesExist() {
+        user.addRecord(record);
+        assertTrue(user.hasRecord());
     }
 }

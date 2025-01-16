@@ -8,7 +8,6 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static se.iths.App.createActivity;
@@ -18,13 +17,13 @@ import static se.iths.App.createUser;
 public class TestApp {
     
     public static User user;
-    private static Activity activity;
+    private static Record record;
     private static ByteArrayOutputStream outputStream;
     @BeforeAll
     static void setupBeforeAll() {
         outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
-        activity = new Activity(10,Duration.parse("PT1H"), "2025-01-01");
+        record = new Record(10,Duration.parse("PT1H"), "2025-01-01");
         user = new User("name");
         user.setHeight(100);
         user.setAge(10);

@@ -19,10 +19,10 @@ public class App {
     public static void menu() {
        System.out.println("""
                Menu:\s
-               1. Register activity\s
-               2. Display all activity\s
-               3. Show details for an activity\s
-               4. Remove an activity\s
+               1. Register record\s
+               2. Display all record\s
+               3. Show details for an record\s
+               4. Remove an record\s
                5. Quit\s
                """
     );
@@ -39,13 +39,13 @@ public class App {
                break;
         case "4":
                while(true) {
-                   System.out.println("Enter an activity Id");
+                   System.out.println("Enter an record Id");
                    String id2 = scanner.nextLine();
                    try {
-                       System.out.println("Would you like to remove this activity? (yes/no)");
-                       user.printActivityById(id2);
+                       System.out.println("Would you like to remove this record? (yes/no)");
+                       user.printRecordById(id2);
                        if(scanner.nextLine().equals("yes")) {
-                           user.deleteActivityById(id2);
+                           user.deleteRecordById(id2);
                            System.out.println("Activity with Id " + id2 + " has been removed");
                            break;
                        }
@@ -90,24 +90,24 @@ public class App {
         
         System.out.println("Enter a date in the format YYYY-MM-DD (ex.2025-09-01), leave empty for today's date: ");
         String date = scanner.nextLine();
-        Activity activity = new Activity(distance, duration, date);
-        System.out.println(activity);
-        //user.addActivity(activity);
+        Record record = new Record(distance, duration, date);
+        System.out.println(record);
+        //user.addActivity(record);
     }
 
     public static void printExistingActivities() {
-        if (user.hasActivity())
-        user.printActivities();
+        if (user.hasRecord())
+        user.printRecords();
         else {
-            System.out.println("No previous activity to print");
+            System.out.println("No previous record to print");
         }
     }
 
     public static void printDetailsOfAnActivity(){
         try {
-            System.out.println("Enter an activity Id ");
+            System.out.println("Enter an record Id ");
             String id = scanner.nextLine();
-             user.printActivityById(id);
+             user.printRecordById(id);
         } catch (IllegalArgumentException e) { 
             System.out.println(e);
         }

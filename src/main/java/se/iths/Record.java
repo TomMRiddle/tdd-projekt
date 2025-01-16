@@ -3,13 +3,13 @@ package se.iths;
 import java.time.Duration;
 import java.time.LocalDate;
 
-public class Activity {
+public class Record {
     private static int idCounter = 0;
     private String id;
     private int distance;
     private Duration duration;
     private LocalDate startDate;
-    public Activity(int distance, Duration duration, String startDate) throws IllegalArgumentException, NullPointerException {
+    public Record(int distance, Duration duration, String startDate) throws IllegalArgumentException, NullPointerException {
         if(distance == 0) {
             throw new IllegalArgumentException("Distance must be greater than 0");
         }
@@ -24,7 +24,7 @@ public class Activity {
         this.startDate = LocalDate.parse(startDate);
         this.duration = duration;
     }
-    public Activity(int distance, Duration duration) {
+    public Record(int distance, Duration duration) {
         this(distance, duration, LocalDate.now().toString());
     }
     public int getDistance() {

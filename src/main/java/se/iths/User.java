@@ -12,8 +12,8 @@ public class User {
     private int weight;
     private int height;
     private int fitnessScore;
-    private HashMap <String, Activity> activities = new HashMap<>();
-    private String latestActivityId;
+    protected HashMap <String, Record> records = new HashMap<>();
+    private String latestRecordById;
 
     
     public User (String name){
@@ -21,14 +21,14 @@ public class User {
         this.fitnessScore = 0;
     }
 
-    public void addActivity(Activity activity) {
-        fitnessScore += activity.getDistance() + (activity.getAverageSpeed() / activity.getMinutesPerKilometer()) - getDaysSinceLastActivity(activity.getStartDate()) / 2;
-        latestActivityId = activity.getId();
-        activities.put(activity.getId(), activity);
+    public void addRecord(Record record) {
+        fitnessScore += record.getDistance() + (record.getAverageSpeed() / record.getMinutesPerKilometer()) - getDaysSinceLastRecord(record.getStartDate()) / 2;
+        latestRecordById = record.getId();
+        records.put(record.getId(), record);
     }
 
-    public boolean hasActivity() {
-        return !activities.isEmpty();
+    public boolean hasRecord() {
+        return !records.isEmpty();
     }
     
     public String getName(){
@@ -47,8 +47,8 @@ public class User {
         return height;
     }
 
-    public Activity getActivityById(String id) {
-        return activities.get(id);
+    public Record getRecordById(String id) {
+        return records.get(id);
     }
 
     public void setWeight(int weight) {
@@ -63,40 +63,40 @@ public class User {
         this.age = age;
     }
 
-    private Activity getLatestActivity() {
-        return getActivityById(latestActivityId);
+    private Record getLatestRecord() {
+        return getRecordById(latestRecordById);
     }
-    public int getDaysSinceLastActivity(LocalDate newDate) {
-        return (getLatestActivity() == null ? 0 : (int)ChronoUnit.DAYS.between(getLatestActivity().getStartDate(), newDate));
+    public int getDaysSinceLastRecord(LocalDate newDate) {
+        return (getLatestRecord() == null ? 0 : (int)ChronoUnit.DAYS.between(getLatestRecord().getStartDate(), newDate));
     }
     public int getFitnessScore() {
         return fitnessScore;
     }
 
     public int getTotalDistance() {
-        return activities.values().stream().mapToInt(Activity::getDistance).sum();
+        return records.values().stream().mapToInt(se.iths.Record::getDistance).sum();
     }
     public double getAverageDistance() {
-        return activities.values().stream().mapToInt(Activity::getDistance).average().orElseThrow(NullPointerException::new);
+        return records.values().stream().mapToInt(se.iths.Record::getDistance).average().orElseThrow(NullPointerException::new);
     }
-    public void printActivities() {
+    public void printRecords() {
 
-        for (Activity entry: activities.values()) {
+        for (Record entry: records.values()) {
             System.out.println(entry);
         }
     }
 
-    public void printActivityById(String id) throws NullPointerException {
-        if(!activities.containsKey(id)) {
+    public void printRecordById(String id) throws NullPointerException {
+        if(!records.containsKey(id)) {
             throw new NullPointerException("Id not found");
         }
-        System.out.println(activities.get(id));
+        System.out.println(records.get(id));
     }
-    public void deleteActivityById(String id) throws NullPointerException {
-        if(!activities.containsKey(id)) {
+    public void deleteRecordById(String id) throws NullPointerException {
+        if(!records.containsKey(id)) {
             throw new NullPointerException("Cannot delete non-existing activity: Activity Id not found");
         }
-        activities.remove(id);
+        records.remove(id);
     }
 
     @Override
