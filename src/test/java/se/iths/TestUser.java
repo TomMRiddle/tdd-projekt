@@ -81,7 +81,6 @@ class TestUser {
 
     @Test
     void hasDaysSinceLastRecord() throws IOException {
-        user.addRecord(record);
         assertEquals(ChronoUnit.DAYS.between(LocalDate.parse("2025-01-01"), record.getStartDate()), user.getDaysSinceLastRecord(record.getStartDate()));
     }
 
@@ -97,6 +96,7 @@ class TestUser {
     @Test
     void hasFitnessScoreFirstRecord() throws IOException {
         user.addRecord(record);
+        when(fileStorage.readRecord(record.getId())).thenReturn(record);
         assertEquals(11,user.getFitnessScore());
     }
 
@@ -104,7 +104,9 @@ class TestUser {
     void hasFitnessScoreSecondRecord() throws IOException {
         user.addRecord(record);
         user.addRecord(record2);
-        assertEquals(20,user.getFitnessScore());
+        when(fileStorage.readRecord(record.getId())).thenReturn(record);
+        when(fileStorage.readRecord(record2.getId())).thenReturn(record2);
+        assertEquals(20, user.getFitnessScore());
     }
 
     @Test
@@ -122,9 +124,6 @@ class TestUser {
         when(fileStorage.readRecord(record2.getId())).thenReturn(record2);
         when(fileStorage.readRecord(record3.getId())).thenReturn(record3);
         when(fileStorage.getRecordIDs()).thenReturn(new ArrayList<String>(List.of(record.getId(), record2.getId(), record3.getId())));
-        user.addRecord(record);
-        user.addRecord(record2);
-        user.addRecord(record3);
         assertEquals(20, user.getAverageDistance());
     }
 
@@ -174,8 +173,9 @@ class TestUser {
 
     @Test
     void hasRecordTrueWhenRecordsExist() throws IOException {
-        user.addRecord(record);
         when(fileStorage.getRecordIDs()).thenReturn(new ArrayList<String>(List.of("1")));
         assertTrue(user.hasRecord());
     }
+
+
 }

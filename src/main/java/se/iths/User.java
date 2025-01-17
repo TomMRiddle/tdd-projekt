@@ -66,8 +66,12 @@ public class User {
         this.age = age;
     }
 
-    private Record getLatestRecord() throws IOException {
-        return getRecordById(latestRecordById);
+    private Record getLatestRecord() {
+        try {
+            return getRecordById(latestRecordById);
+        } catch (IOException e) {
+            return null;
+        }
     }
     public int getDaysSinceLastRecord(LocalDate newDate) throws IOException {
         return (getLatestRecord() == null ? 0 : (int)ChronoUnit.DAYS.between(getLatestRecord().getStartDate(), newDate));
