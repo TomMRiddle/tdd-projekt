@@ -77,8 +77,17 @@ public class User {
     }
 
     public int getTotalDistance() {
-        //refactor to use fileStorage
-        return records.values().stream().mapToInt(se.iths.Record::getDistance).sum();
+        AtomicReference<Integer> distance = new AtomicReference<>((int) 0);
+        fileStorage.getRecordIDs().forEach(recordId -> {
+            distance.updateAndGet(v -> {
+                try {
+                    return (int) (v + fileStorage.readRecord(recordId).getDistance());
+                } catch (IOException e) {
+                    throw new NullPointerException(e.getMessage());
+                }
+            });
+        });
+        return distance.get();
     }
     public double getAverageDistance() {
         AtomicReference<Double> distance = new AtomicReference<>((double) 0);

@@ -111,6 +111,7 @@ class TestUser {
     void hasTotalDistance() throws IOException {
         when(fileStorage.readRecord(record.getId())).thenReturn(record);
         when(fileStorage.readRecord(record2.getId())).thenReturn(record2);
+        when(fileStorage.getRecordIDs()).thenReturn(new ArrayList<String>(List.of(record.getId(), record2.getId())));
         assertEquals(20, user.getTotalDistance());
     }
 
@@ -139,7 +140,7 @@ class TestUser {
     @Test
     void printsDetailsWhenGivenIdExist() throws IOException {
         when(fileStorage.readRecord(record.getId())).thenReturn(record);
-        user.printRecordById("1");
+        user.printRecordById(record.getId());
         assertEquals( "Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator, outContent.toString());
     }
 
