@@ -24,6 +24,7 @@ class TestUser {
     private User user;
     private static Record record;
     private static Record record2;
+    private static Record record3;
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
 
@@ -35,6 +36,7 @@ class TestUser {
         fileStorage = mock(FileStorage.class);
         record = new Record(10,Duration.parse("PT1H"), "2025-01-01");
         record2 = new Record(10, Duration.parse("PT1H"), "2025-01-05");
+        record3 = new Record(40, Duration.parse("PT1H"), "2025-01-06");
     }
 
     @BeforeEach
@@ -119,7 +121,6 @@ class TestUser {
 
     @Test
     void hasAverageDistance() throws IOException {
-        Record record3 = new Record(40, Duration.parse("PT1H"), "2025-01-06");
         when(fileStorage.readRecord(record.getId())).thenReturn(record);
         when(fileStorage.readRecord(record2.getId())).thenReturn(record2);
         when(fileStorage.readRecord(record3.getId())).thenReturn(record3);
@@ -177,5 +178,28 @@ class TestUser {
         assertTrue(user.hasRecord());
     }
 
+    @Test
+    void hasRecordsFilteredByDistance() throws IOException {
+        when(fileStorage.readRecord(record.getId())).thenReturn(record);
+        when(fileStorage.readRecord(record2.getId())).thenReturn(record2);
+        when(fileStorage.readRecord(record3.getId())).thenReturn(record3);
+        when(fileStorage.getRecordIDs()).thenReturn(Arrays.asList(record.getId(),record2.getId(), record3.getId()));
+        int min = 0;
+        int max = 10;
+        user.printFilteredRecords(min,max);
+        assertEquals("Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator + "Id: 2, Date: 2025-01-05, Duration: PT1H, Distance: 10 km" +lineSeparator, outContent.toString());
+    }
 
+    @Test
+    void hasMessageWhenNoFilteredRecordsExist() throws IOException {
+        when(fileStorage.readRecord(record.getId())).thenReturn(record);
+        when(fileStorage.readRecord(record2.getId())).thenReturn(record2);
+        when(fileStorage.readRecord(record3.getId())).thenReturn(record3);
+        when(fileStorage.getRecordIDs()).thenReturn(Arrays.asList(record.getId(),record2.getId(), record3.getId()));
+        int min = 11;
+        int max = 39;
+        user.printFilteredRecords(min,max);
+        assertEquals("No records found between the filter parameters" +lineSeparator, outContent.toString());
+
+    }
 }
