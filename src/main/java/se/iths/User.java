@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class User {
@@ -80,7 +81,17 @@ public class User {
         return records.values().stream().mapToInt(se.iths.Record::getDistance).sum();
     }
     public double getAverageDistance() {
-        return records.values().stream().mapToInt(se.iths.Record::getDistance).average().orElseThrow(NullPointerException::new);
+        AtomicReference<Double> distance = new AtomicReference<>((double) 0);
+        fileStorage.getRecordIDs().forEach(recordId -> {
+            distance.updateAndGet(v -> {
+                try {
+                    return (double) (v + fileStorage.readRecord(recordId).getDistance());
+                } catch (IOException e) {
+                    throw new NullPointerException(e.getMessage());
+                }
+            });
+        });
+        return distance.get()/fileStorage.getRecordIDs().size();
     }
     public void printRecords() {
         fileStorage.getRecordIDs().stream().forEach(recordId -> {

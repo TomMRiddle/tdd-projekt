@@ -116,9 +116,14 @@ class TestUser {
 
     @Test
     void hasAverageDistance() throws IOException {
+        Record record3 = new Record(40, Duration.parse("PT1H"), "2025-01-06");
+        when(fileStorage.readRecord(record.getId())).thenReturn(record);
+        when(fileStorage.readRecord(record2.getId())).thenReturn(record2);
+        when(fileStorage.readRecord(record3.getId())).thenReturn(record3);
+        when(fileStorage.getRecordIDs()).thenReturn(new ArrayList<String>(List.of(record.getId(), record2.getId(), record3.getId())));
         user.addRecord(record);
         user.addRecord(record2);
-        user.addRecord(new Record(40, Duration.parse("PT1H"), "2025-01-06"));
+        user.addRecord(record3);
         assertEquals(20, user.getAverageDistance());
     }
 
