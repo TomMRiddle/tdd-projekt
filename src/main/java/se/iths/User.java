@@ -109,8 +109,19 @@ public class User {
         fileStorage.deleteRecord(id);
     }
 
-    public void printFilteredRecords(double min, double max) throws IOException {
-
+    public void printRecordsFilteredByDistance(double min, double max) throws IOException {
+        List<String> recordIDs = fileStorage.getRecordIDs();
+        boolean recordsFound = false;
+        for (String recordID : recordIDs) {
+            Record record = fileStorage.readRecord(recordID);
+            if (record.getDistance() >= min && record.getDistance() <= max) {
+                System.out.println(record);
+                recordsFound = true;
+            }
+        }
+        if (!recordsFound) {
+            System.out.println("No records found between the filter parameters");
+        }
     }
 
     @Override

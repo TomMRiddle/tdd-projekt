@@ -185,25 +185,25 @@ class TestUser {
 
     @Test
     void hasRecordsFilteredByDistance() throws IOException {
+        when(fileStorage.getRecordIDs()).thenReturn(Arrays.asList(record.getId(),record2.getId(), record3.getId()));
         when(fileStorage.readRecord(record.getId())).thenReturn(record);
         when(fileStorage.readRecord(record2.getId())).thenReturn(record2);
         when(fileStorage.readRecord(record3.getId())).thenReturn(record3);
-        when(fileStorage.getRecordIDs()).thenReturn(Arrays.asList(record.getId(),record2.getId(), record3.getId()));
         int min = 0;
         int max = 10;
-        user.printFilteredRecords(min,max);
+        user.printRecordsFilteredByDistance(min,max);
         assertEquals("Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator + "Id: 2, Date: 2025-01-05, Duration: PT1H, Distance: 10 km" +lineSeparator, outContent.toString());
     }
 
     @Test
     void hasMessageWhenNoFilteredRecordsExist() throws IOException {
+        when(fileStorage.getRecordIDs()).thenReturn(Arrays.asList(record.getId(),record2.getId(), record3.getId()));
         when(fileStorage.readRecord(record.getId())).thenReturn(record);
         when(fileStorage.readRecord(record2.getId())).thenReturn(record2);
         when(fileStorage.readRecord(record3.getId())).thenReturn(record3);
-        when(fileStorage.getRecordIDs()).thenReturn(Arrays.asList(record.getId(),record2.getId(), record3.getId()));
         int min = 11;
         int max = 39;
-        user.printFilteredRecords(min,max);
-        assertEquals("No records found between the filter parameters" +lineSeparator, outContent.toString());
+        user.printRecordsFilteredByDistance(min,max);
+        assertEquals("No records found between the filter parameters" + lineSeparator, outContent.toString());
     }
 }
