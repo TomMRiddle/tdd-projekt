@@ -17,6 +17,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Replace;
 import org.mockito.Mock;
 
 class TestUser {
@@ -87,12 +88,8 @@ class TestUser {
     }
 
     @Test
-    void hasZeroDaysSinceLastRecordWhenNoPreviousRecord() {
-        try {
+    void hasZeroDaysSinceLastRecordWhenNoPreviousRecord() throws IOException {
             assertEquals(0, user.getDaysSinceLastRecord(record.getStartDate()));
-        } catch (IOException e) {
-            fail("IOException thrown when trying to get date from record");
-        }
     }
 
     @Test
@@ -144,38 +141,46 @@ class TestUser {
         assertEquals( "Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator, outContent.toString());
     }
 
+    /**
+     * No CUT!
+     * throw exception in CUT not in test
+     */
     @Test
-    void throwsExceptionWhenRecordIdNotFound() {
-        try {
-            when(fileStorage.readRecord("99")).thenThrow(NullPointerException.class);
-        } catch (Exception e) {
-            assertThrows(NullPointerException.class, () -> user.printRecordById("99"), "Id not found");
-        }
+    void throwsExceptionWhenRecordIdNotFound() throws IOException {
+            when(fileStorage.readRecord("99")).thenThrow(IOException.class);
+            assertThrows(IOException.class, () -> user.printRecordById("99"));
     }
 
     @Test
-    void deleteRecordWhenGivenId() {
-        try {
+    void deleteRecordWhenGivenId() throws IOException {
             user.deleteRecordById(record.getId());
             verify(fileStorage).deleteRecord(record.getId());
-        } catch (IOException e) {
-            fail("IOException thrown when trying to delete existing record");
-        }
     }
 
+    /**
+     * No CUT!
+     * throw exception in CUT not in test
+     */
     @Test
-    void throwsExceptionWhenDeletingNonExistingRecord() {
+    void throwsExceptionWhenDeletingNonExistingRecord() throws IOException {
+        doThrow(NullPointerException.class).when(fileStorage).deleteRecord("99");
         try {
-            doThrow(NullPointerException.class).when(fileStorage).deleteRecord("99");
-        } catch (IOException e) {
-            assertThrows(NullPointerException.class, () -> user.deleteRecordById("99"), "Cannot delete non-existing activity: Activity Id not found");
+            user.deleteRecordById("99");
+            fail("Expected exception not thrown");
+        } catch (NullPointerException e) {
+            assertEquals(NullPointerException.class, e.getClass());
         }
     }
 
     @Test
-    void hasRecordTrueWhenRecordsExist() throws IOException {
+    void hasRecordTrueWhenRecordsExist() {
         when(fileStorage.getRecordIDs()).thenReturn(new ArrayList<String>(List.of("1")));
         assertTrue(user.hasRecord());
+    }
+    @Test
+    void hasRecordFalseWhenRecordsNotExist() {
+        when(fileStorage.getRecordIDs()).thenReturn(new ArrayList<String>());
+        assertFalse(user.hasRecord());
     }
 
     @Test
@@ -200,6 +205,5 @@ class TestUser {
         int max = 39;
         user.printFilteredRecords(min,max);
         assertEquals("No records found between the filter parameters" +lineSeparator, outContent.toString());
-
     }
 }

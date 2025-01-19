@@ -3,7 +3,9 @@ package se.iths;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -66,12 +68,8 @@ public class User {
         this.age = age;
     }
 
-    private Record getLatestRecord() {
-        try {
-            return getRecordById(latestRecordById);
-        } catch (IOException e) {
-            return null;
-        }
+    private Record getLatestRecord() throws IOException {
+        return fileStorage.readRecord(latestRecordById);
     }
     public int getDaysSinceLastRecord(LocalDate newDate) throws IOException {
         return (getLatestRecord() == null ? 0 : (int)ChronoUnit.DAYS.between(getLatestRecord().getStartDate(), newDate));
@@ -80,55 +78,39 @@ public class User {
         return fitnessScore;
     }
 
-    public int getTotalDistance() {
-        AtomicReference<Integer> distance = new AtomicReference<>((int) 0);
-        fileStorage.getRecordIDs().forEach(recordId -> {
-            distance.updateAndGet(v -> {
-                try {
-                    return (int) (v + fileStorage.readRecord(recordId).getDistance());
-                } catch (IOException e) {
-                    throw new NullPointerException(e.getMessage());
-                }
-            });
-        });
-        return distance.get();
+    public int getTotalDistance() throws IOException {
+        int distance = 0;
+        List<String> recordIDs = fileStorage.getRecordIDs();
+        for(String recordID : recordIDs) {
+            distance += fileStorage.readRecord(recordID).getDistance();
+        }
+        return distance;
     }
-    public double getAverageDistance() {
-        AtomicReference<Double> distance = new AtomicReference<>((double) 0);
-        fileStorage.getRecordIDs().forEach(recordId -> {
-            distance.updateAndGet(v -> {
-                try {
-                    return (double) (v + fileStorage.readRecord(recordId).getDistance());
-                } catch (IOException e) {
-                    throw new NullPointerException(e.getMessage());
-                }
-            });
-        });
-        return distance.get()/fileStorage.getRecordIDs().size();
+    public double getAverageDistance() throws IOException {
+        double distance = 0;
+        List<String> recordIDs = fileStorage.getRecordIDs();
+        for(String recordID : recordIDs) {
+            distance += fileStorage.readRecord(recordID).getDistance();
+        }
+        return distance/recordIDs.size();
     }
-    public void printRecords() {
-        fileStorage.getRecordIDs().stream().forEach(recordId -> {
-            try {
-                System.out.println(fileStorage.readRecord(recordId));
-            } catch (IOException e) {
-                throw new NullPointerException(e.getMessage());
-            }
-        });
+    public void printRecords() throws IOException {
+        List<String> recordIDs = fileStorage.getRecordIDs();
+        for (String recordID : recordIDs) {
+            System.out.println(fileStorage.readRecord(recordID));
+        }
     }
 
-    public void printRecordById(String id) {
-        try {
-            System.out.println(fileStorage.readRecord(id));
-        } catch (IOException e) {
-            throw new NullPointerException("Id not found");
-        }
+    public void printRecordById(String id) throws IOException {
+        System.out.println(fileStorage.readRecord(id));
     }
-    public void deleteRecordById(String id) throws NullPointerException {
-        try {
-            fileStorage.deleteRecord(id);
-        } catch (IOException e) {
-            throw new NullPointerException("Cannot delete non-existing activity: Activity Id not found");
-        }
+
+    public void deleteRecordById(String id) throws IOException {
+        fileStorage.deleteRecord(id);
+    }
+
+    public void printFilteredRecords(double min, double max) throws IOException {
+
     }
 
     @Override
