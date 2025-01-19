@@ -3,10 +3,9 @@ package se.iths;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.MissingResourceException;
+import java.util.Objects;
 
 
 public class User {
@@ -16,7 +15,6 @@ public class User {
     private int weight;
     private int height;
     private int fitnessScore;
-    private HashMap <String, Record> records = new HashMap<>();
     private String latestRecordById;
     private FileStorage fileStorage;
     
@@ -53,7 +51,11 @@ public class User {
     }
 
     public Record getRecordById(String id) throws IOException {
-        return fileStorage.readRecord(id);
+        Record record = fileStorage.readRecord(id);
+        if(Objects.isNull(record)) {
+            throw new NullPointerException("Record not found");
+        }
+        return record;
     }
 
     public void setWeight(int weight) {
@@ -102,7 +104,7 @@ public class User {
     }
 
     public void printRecordById(String id) throws IOException {
-        System.out.println(fileStorage.readRecord(id));
+        System.out.println(getRecordById(id));
     }
 
     public void deleteRecordById(String id) throws IOException {
@@ -126,6 +128,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User created with:\nName: "+name+"\nAge: "+age+" years\nWeight: "+weight+" kg\nHeight: "+height+" cm";
+        return "Name: "+name+"\nAge: "+age+" years\nWeight: "+weight+" kg\nHeight: "+height+" cm";
     }
 }

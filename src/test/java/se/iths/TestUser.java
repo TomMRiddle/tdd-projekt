@@ -17,7 +17,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Replace;
 import org.mockito.Mock;
 
 class TestUser {
@@ -52,6 +51,11 @@ class TestUser {
     @AfterEach
     void restoreStreams() {
         System.setOut(originalOut);
+    }
+
+    @Test
+    void hasUser() {
+        assertEquals("Name: name\nAge: 10 years\nWeight: 100 kg\nHeight: 100 cm", user.toString());
     }
 
     @Test
@@ -141,14 +145,16 @@ class TestUser {
         assertEquals( "Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator, outContent.toString());
     }
 
-    /**
-     * No CUT!
-     * throw exception in CUT not in test
-     */
     @Test
-    void throwsExceptionWhenRecordIdNotFound() throws IOException {
-            when(fileStorage.readRecord("99")).thenThrow(IOException.class);
-            assertThrows(IOException.class, () -> user.printRecordById("99"));
+    void getRecordByIdThrowsExceptionWhenRecordIdNotFound() throws IOException {
+        when(fileStorage.readRecord("99")).thenReturn(null);
+        assertThrows(NullPointerException.class, () -> user.getRecordById("99"));
+    }
+
+    @Test
+    void printRecordByIdThrowsExceptionWhenRecordIdNotFound() throws IOException {
+            when(fileStorage.readRecord("99")).thenReturn(null);
+            assertThrows(NullPointerException.class, () -> user.printRecordById("99"));
     }
 
     @Test
@@ -159,7 +165,7 @@ class TestUser {
 
     /**
      * No CUT!
-     * throw exception in CUT not in test
+     * assumes that the FileStorage class being mocked throws the exception, avoids redundant calls to readRecord.
      */
     @Test
     void throwsExceptionWhenDeletingNonExistingRecord() throws IOException {
