@@ -6,10 +6,10 @@ import java.time.LocalDate;
 public class Record {
     private static int idCounter = 0;
     private String id;
-    private int distance;
+    private double distance;
     private Duration duration;
     private LocalDate startDate;
-    public Record(int distance, Duration duration, String startDate) throws IllegalArgumentException, NullPointerException {
+    public Record(double distance, Duration duration, String startDate) throws IllegalArgumentException, NullPointerException {
         if(distance == 0) {
             throw new IllegalArgumentException("Distance must be greater than 0");
         }
@@ -24,10 +24,10 @@ public class Record {
         this.startDate = LocalDate.parse(startDate);
         this.duration = duration;
     }
-    public Record(int distance, Duration duration) {
+    public Record(double distance, Duration duration) {
         this(distance, duration, LocalDate.now().toString());
     }
-    public int getDistance() {
+    public double getDistance() {
         return distance;
     }
     public Duration getDuration() {
@@ -39,11 +39,11 @@ public class Record {
     public String getId() {
         return id;
     }
-    public int getAverageSpeed() {
+    public double getAverageSpeed() {
         return distance/(int)duration.toHours();
     }
-    public int getMinutesPerKilometer() {
-        return (int)duration.toMinutes()/distance;
+    public double getMinutesPerKilometer() {
+        return duration.toMinutes()/distance;
     }
 
     @Override

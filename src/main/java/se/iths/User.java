@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.MissingResourceException;
 import java.util.Objects;
-
 
 public class User {
 
@@ -80,8 +78,8 @@ public class User {
         return fitnessScore;
     }
 
-    public int getTotalDistance() throws IOException {
-        int distance = 0;
+    public double getTotalDistance() throws IOException {
+        double distance = 0;
         List<String> recordIDs = fileStorage.getRecordIDs();
         for(String recordID : recordIDs) {
             distance += fileStorage.readRecord(recordID).getDistance();
