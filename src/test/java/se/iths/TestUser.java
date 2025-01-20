@@ -135,14 +135,14 @@ class TestUser {
         when(fileStorage.readRecord(record.getId())).thenReturn(record);
         when(fileStorage.readRecord(record2.getId())).thenReturn(record2);
         user.printRecords();
-        assertEquals("Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator + "Id: 2, Date: 2025-01-05, Duration: PT1H, Distance: 10 km" +lineSeparator, outContent.toString());
+        assertEquals("Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10.0 km" + lineSeparator + "Id: 2, Date: 2025-01-05, Duration: PT1H, Distance: 10.0 km" +lineSeparator, outContent.toString());
     }
 
     @Test
     void printsDetailsWhenGivenIdExist() throws IOException {
         when(fileStorage.readRecord(record.getId())).thenReturn(record);
         user.printRecordById(record.getId());
-        assertEquals( "Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator, outContent.toString());
+        assertEquals( "Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10.0 km" + lineSeparator, outContent.toString());
     }
 
     @Test
@@ -170,12 +170,7 @@ class TestUser {
     @Test
     void throwsExceptionWhenDeletingNonExistingRecord() throws IOException {
         doThrow(NullPointerException.class).when(fileStorage).deleteRecord("99");
-        try {
-            user.deleteRecordById("99");
-            fail("Expected exception not thrown");
-        } catch (NullPointerException e) {
-            assertEquals(NullPointerException.class, e.getClass());
-        }
+        assertThrows(NullPointerException.class, () -> user.deleteRecordById("99"));
     }
 
     @Test
@@ -198,7 +193,7 @@ class TestUser {
         int min = 0;
         int max = 10;
         user.printRecordsFilteredByDistance(min,max);
-        assertEquals("Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10 km" + lineSeparator + "Id: 2, Date: 2025-01-05, Duration: PT1H, Distance: 10 km" +lineSeparator, outContent.toString());
+        assertEquals("Id: 1, Date: 2025-01-01, Duration: PT1H, Distance: 10.0 km" + lineSeparator + "Id: 2, Date: 2025-01-05, Duration: PT1H, Distance: 10.0 km" +lineSeparator, outContent.toString());
     }
 
     @Test
